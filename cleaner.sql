@@ -954,4 +954,24 @@ where upper (pais) = 'ESPAÑA';
  where upper (cl.ciudad) = 'MADRID'
  and (em.codigo_empleado = 11
  or em.codigo_empleado = 30);
+  
+ SELECT SUM(TABLA2.TOTAL_REGISTROS) SUMA_REGISTROS,
+GROUP_CONCAT(TABLA2.CIUDAD ORDER BY TABLA2.CIUDAD SEPARATOR ';') LISTA_CIUDAD
+ FROM (select tabla.ciudad,CAST(tabla.total_registros AS SIGNED) TOTAL_REGISTROS
+from(select cl.ciudad,count(*) total_registros /*cl.ciudad,em.codigo_empleado*/
+ from cliente cl, empleado em
+where em.codigo_empleado = cl.codigo_empleado_rep_ventas
+and em.codigo_empleado in (11,30)
+group by cl.ciudad) tabla
+union
+select('Barcelona')ciudad,(10) total_registros from dual) TABLA2;
+
+/*USO DE RELLENO DE CARACTERES CON LPAD Y RPAD*/
+select cl.ciudad,count(*) total_registros,
+LPAD(count(*), 8,'0') total_registros, RPAD(count(*),8,'0') total_registros
+from cliente cl, empleado em
+where em.codigo_empleado = cl.codigo_empleado_rep_ventas
+and em.codigo_empleado in (11, 30)
+group by cl.ciudad
+
  
